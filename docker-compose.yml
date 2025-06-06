@@ -1,0 +1,45 @@
+services:
+    app:
+        container_name: contta-container
+        environment:
+            DB_SERVER: ${DB_SERVER}
+            DB_USER: ${DB_USER}
+            DB_PASSWORD: ${DB_PASSWORD}
+            DB_NAME: ${DB_NAME}
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "3000:80"
+        networks:
+            - contta-network
+        tty: true
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin-container
+        restart: always
+        ports:
+            - "3100:80"
+        environment:
+            PMA_HOST: db
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        networks:
+            - contta-network
+
+    db:
+        image: mysql:5.7
+        container_name: mysqldb-container
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASE: ${DB_NAME}
+        ports:
+            - "3306:3306"
+        networks:
+            - contta-network
+
+networks:
+    contta-network:
+        name: contta-network
+        external: false

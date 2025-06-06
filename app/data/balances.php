@@ -6,9 +6,9 @@ include($_SERVER["DOCUMENT_ROOT"] . '/app/function/utils/get_days_in_month.php')
 // Specific account
 $account = filter_input(INPUT_GET, 'account', FILTER_SANITIZE_NUMBER_INT);
 
-// Specific category 
+// Specific category
 if (isset($_GET['mainCat']) && $_GET['mainCat'] === 'true'){
-    $mainCat = filter_input(INPUT_GET, 'category', FILTER_SANITIZE_STRING);
+    $mainCat = filter_input(INPUT_GET, 'category', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $secCat = null;
 } else {
     $secCat = filter_input(INPUT_GET, 'category', FILTER_SANITIZE_NUMBER_INT);
@@ -19,10 +19,10 @@ if (isset($_GET['mainCat']) && $_GET['mainCat'] === 'true'){
 if (isset($_GET['month'])){
     if ($_GET['month'] === 'current') {
         $month = $mes;
-        $maxMonth = $mes;   
+        $maxMonth = $mes;
     } else {
         $month = $_GET['month'];
-        $maxMonth = $_GET['month'];    
+        $maxMonth = $_GET['month'];
     }
 } else {
     $month = 1;
@@ -66,14 +66,14 @@ for ($month; $month <= $maxMonth; $month++){
 
         foreach($days as $day){
             $ofDayIncomes = floatval(calculate_result($bdConexao, $month, $year, "SSM", $account, $secCat, $mainCat, $day, false, "R"));
-            $ofDayExpenses = floatval(calculate_result($bdConexao, $month, $year, "SSM", $account, $secCat, $mainCat, $day, false, "D"));        
+            $ofDayExpenses = floatval(calculate_result($bdConexao, $month, $year, "SSM", $account, $secCat, $mainCat, $day, false, "D"));
             $ofDayBalance = floatval(calculate_result($bdConexao, $month, $year, "SSM", $account, $secCat, $mainCat, $day, false));
             $ofMonthIncomes = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, $day, true, "R"));
-            $ofMonthExpenses = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, $day, true, "D"));        
-            $ofMonthBalance = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, $day, true)); 
+            $ofMonthExpenses = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, $day, true, "D"));
+            $ofMonthBalance = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, $day, true));
             $ofAllIncomes = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, $day, false, "R"));
-            $ofAllExpenses = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, $day, false, "D"));        
-            $ofAllBalance = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, $day, false));  
+            $ofAllExpenses = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, $day, false, "D"));
+            $ofAllBalance = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, $day, false));
 
 
             $object = [
@@ -85,41 +85,41 @@ for ($month; $month <= $maxMonth; $month++){
                 'ofday' => [
                     'incomes' => $ofDayIncomes,
                     'expenses' => $ofDayExpenses,
-                    'balance' => $ofDayBalance    
+                    'balance' => $ofDayBalance
                 ],
                 'ofmonth' => [
                     'incomes' => $ofMonthIncomes,
                     'expenses' => $ofMonthExpenses,
-                    'balance' => $ofMonthBalance    
+                    'balance' => $ofMonthBalance
                 ],
                 'ofall' => [
                     'incomes' => $ofAllIncomes,
                     'expenses' => $ofAllExpenses,
-                    'balance' => $ofAllBalance    
+                    'balance' => $ofAllBalance
                 ]
             ];
-        
+
             array_push($data, $object);
-        } 
+        }
     } else {
 
         $ofMonthIncomes = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, null, true, "R"));
-        $ofMonthExpenses = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, null, true, "D"));        
-        $ofMonthBalance = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, null, true)); 
+        $ofMonthExpenses = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, null, true, "D"));
+        $ofMonthBalance = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, null, true));
 
         $ofAllIncomes = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, null, false, "R"));
-        $ofAllExpenses = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, null, false, "D"));        
+        $ofAllExpenses = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, null, false, "D"));
         $ofAllBalance = floatval(calculate_result($bdConexao, $month, $year, "SAM", $account, $secCat, $mainCat, null, false));
 
         $generalIncomes = floatval(calculate_result($bdConexao, $month, $year, "SAG", $account, $secCat, $mainCat, null, false, "R"));
         $generalExpenses = floatval(calculate_result($bdConexao, $month, $year, "SAG", $account, $secCat, $mainCat, null, false, "R"));
         $generalBalance = floatval(calculate_result($bdConexao, $month, $year, "SAG", $account, $secCat, $mainCat, null, false));
-        
+
 
         // $incomes = floatval(calculate_result($bdConexao, $month, $year, "SSM", $account, $secCat, $mainCat, null, true, "R"));
-        // $expenses = floatval(calculate_result($bdConexao, $month, $year, "SSM", $account, $secCat, $mainCat, null, true, "D"));    
-        // $balance = floatval(calculate_result($bdConexao, $month, $year, "SSM", $account, $secCat, $mainCat, null, true));    
-    
+        // $expenses = floatval(calculate_result($bdConexao, $month, $year, "SSM", $account, $secCat, $mainCat, null, true, "D"));
+        // $balance = floatval(calculate_result($bdConexao, $month, $year, "SSM", $account, $secCat, $mainCat, null, true));
+
         $object = [
             'month' => intval($month),
             'year' => intval($year),
@@ -128,22 +128,22 @@ for ($month; $month <= $maxMonth; $month++){
             'ofmonth' => [
                 'incomes' => $ofMonthIncomes,
                 'expenses' => $ofMonthExpenses,
-                'balance' => $ofMonthBalance    
+                'balance' => $ofMonthBalance
             ],
             'ofall' => [
                 'incomes' => $ofAllIncomes,
                 'expenses' => $ofAllExpenses,
-                'balance' => $ofAllBalance    
+                'balance' => $ofAllBalance
             ],
             'general' => [
                 'incomes' => $generalIncomes,
                 'expenses' => $generalExpenses,
-                'balance' => $generalBalance    
+                'balance' => $generalBalance
             ]
             ];
-    
+
         array_push($data, $object);
-    
+
     }
 
 }

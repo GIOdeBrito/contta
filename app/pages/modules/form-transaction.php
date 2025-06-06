@@ -15,27 +15,34 @@ $hoje = date('Y-m-d');
 $id_transacao = filter_input(INPUT_GET, 'id_transacao', FILTER_VALIDATE_INT);
 
 if ($id_transacao) {
-  $transacao_especifica = get_especific_transaction($bdConexao, $id_transacao);
+	$transacao_especifica = get_especific_transaction($bdConexao, $id_transacao);
 
-  foreach ($transacao_especifica as $transacao_em_edicao) :
-    $transacao_edicao_tipo = $transacao_em_edicao['tipo'];
-    $transacao_edicao_data = $transacao_em_edicao['data'];
-    $transacao_edicao_descricao = $transacao_em_edicao['descricao'];
-    $transacao_edicao_valor = format_value(abs($transacao_em_edicao['valor']), 2, ',', '.');
-    $transacao_edicao_categoria = $transacao_em_edicao['id_categoria'];
-    $transacao_edicao_conta = $transacao_em_edicao['id_conta'];
-    $transacao_edicao_parcela = $transacao_em_edicao['parcela'];
-    $transacao_edicao_total_parcelas = $transacao_em_edicao['total_parcelas'];
-  endforeach;
+	foreach ($transacao_especifica as $transacao_em_edicao):
+
+		if(is_null($transacao_em_edicao))
+		{
+			continue;
+		}
+
+
+		$transacao_edicao_tipo = $transacao_em_edicao['tipo'];
+		$transacao_edicao_data = $transacao_em_edicao['data'];
+		$transacao_edicao_descricao = $transacao_em_edicao['descricao'];
+		$transacao_edicao_valor = format_value(abs($transacao_em_edicao['valor'] ?? 0), 2, ',', '.');
+		$transacao_edicao_categoria = $transacao_em_edicao['id_categoria'];
+		$transacao_edicao_conta = $transacao_em_edicao['id_conta'];
+		$transacao_edicao_parcela = $transacao_em_edicao['parcela'];
+		$transacao_edicao_total_parcelas = $transacao_em_edicao['total_parcelas'];
+	endforeach;
 } else {
-  $transacao_edicao_tipo = '';
-  $transacao_edicao_data = '';
-  $transacao_edicao_descricao = '';
-  $transacao_edicao_valor = '';
-  $transacao_edicao_categoria = '';
-  $transacao_edicao_conta = '';
-  $transacao_edicao_parcela = '';
-  $transacao_edicao_total_parcelas = '';
+	$transacao_edicao_tipo = '';
+	$transacao_edicao_data = '';
+	$transacao_edicao_descricao = '';
+	$transacao_edicao_valor = '';
+	$transacao_edicao_categoria = '';
+	$transacao_edicao_conta = '';
+	$transacao_edicao_parcela = '';
+	$transacao_edicao_total_parcelas = '';
 }
 
 ?>

@@ -17,7 +17,7 @@
     <?php if ($tudo == true) : ?>
       <a class="botao-opcoes botao-extrato-outlined" href="?">Ver extrato mensal</a>
     <?php else : ?>
-      <a class="botao-opcoes botao-extrato" href="?tudo=true">Ver extrato completo</a>
+      <a class="botao-opcoes botao-extrato" href="?p=<?php echo $pageName ?>&tudo=true">Ver extrato completo</a>
     <?php endif; ?>
 
     <?php if ($tudo == true) : ?>

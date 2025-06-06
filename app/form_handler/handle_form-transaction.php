@@ -7,12 +7,14 @@ include_once($_SERVER["DOCUMENT_ROOT"] . '/app/function/utils/translate_currency
 include_once($_SERVER["DOCUMENT_ROOT"] . '/app/function/transaction/delete_transaction.php');
 include_once($_SERVER["DOCUMENT_ROOT"] . '/app/function/transaction/create_transaction.php');
 
+include_once($_SERVER["DOCUMENT_ROOT"] . '/app/helpers/url_reconstruct.php');
+
 $origin = $_SERVER['HTTP_REFERER'];
 $origin = explode('?', $origin)[0];
 
 $id_transacao = filter_input(INPUT_POST, 'id_transacao', FILTER_VALIDATE_INT);
 
-if ($id_transacao) {
+if($id_transacao) {
     $transacao_especifica = get_especific_transaction($bdConexao, $id_transacao);
 
     foreach ($transacao_especifica as $transacao_em_edicao) :
@@ -25,7 +27,8 @@ if ($id_transacao) {
         $transacao_edicao_parcela = $transacao_em_edicao['parcela'];
         $transacao_edicao_total_parcelas = $transacao_em_edicao['total_parcelas'];
     endforeach;
-} else {
+}
+else {
     $transacao_edicao_tipo = '';
     $transacao_edicao_data = '';
     $transacao_edicao_descricao = '';
@@ -59,43 +62,61 @@ if ($transacao['tipo'] == 'D' or $transacao['tipo'] == 'T') {
 
 $transacao['descricao'] = $_POST['descricao'];
 
-if ($transacao['tipo'] == 'D' or $transacao['tipo'] == 'R') {
+if($transacao['tipo'] == 'D' or $transacao['tipo'] == 'R')
+{
     $transacao['categoria'] = $_POST['categoria'];
-} else {
+}
+else
+{
     $transacao['categoria'] = null;
 }
-if ($id_transacao && $transacao_edicao_tipo == 'T') {
+
+if($id_transacao && $transacao_edicao_tipo == 'T')
+{
     $transacao['conta'] = $transacao_edicao_conta;
-} else {
+}
+else
+{
     $transacao['conta'] = $_POST['conta'];
 }
 
-if (!$id_transacao && $transacao['tipo'] == 'T') {
+if(!$id_transacao && $transacao['tipo'] == 'T')
+{
     $transacao['contadestino'] = $_POST['contadestino'];
-} else {
+}
+else
+{
     $transacao['contadestino'] = null;
 }
 
-if (!$id_transacao && isset($_POST['parcelas'])) {
+if(!$id_transacao && isset($_POST['parcelas']))
+{
     $transacao['parcelas'] = $_POST['parcelas'];
-} else if ($id_transacao && isset($_POST['parcela']) && isset($_POST['total-parcelas'])) {
+}
+else if($id_transacao && isset($_POST['parcela']) && isset($_POST['total-parcelas']))
+{
     $transacao['parcela'] = $_POST['parcela'];
     $transacao['total-parcelas'] = $_POST['total-parcelas'];
-    $editarParcelas = $_POST['editar-parcelas'];
+	$editarParcelas = $_POST['editar-parcelas'] ?? false;
 }
 
-// CHAMA AS FUNÇÕES PARA INCLUIR/EDITAR/APAGAR:
+// CHAMA AS FUNÇÕES PARA INCLUIR/EDITAR/APAGAR:\\
+
+// Cleans url remving unnecessary arguments
+$clean_origin = url_reconstruct($origin);
 
 if (isset($_POST['apagar']) && $_POST['apagar'] == true) {
-    delete_transaction($bdConexao, $transacao, $id_transacao, $editarParcelas);
-    header('Location: ' . $origin);
+	delete_transaction($bdConexao, $transacao, $id_transacao, $editarParcelas);
+    header('Location: ' . $clean_origin);
     die();
-} else if ($id_transacao) {
+}
+else if ($id_transacao) {
     create_transaction($bdConexao, $transacao, true, $id_transacao, $editarParcelas);
-    header('Location: ' . $origin);
+    header('Location: ' . $clean_origin);
     die();
-} else {
+}
+else {
     create_transaction($bdConexao, $transacao, false, null);
-    header('Location: ' . $origin);
+    header('Location: ' . $clean_origin);
     die();
 }

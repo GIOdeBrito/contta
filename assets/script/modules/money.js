@@ -16,6 +16,11 @@ export default class Money {
         const currency = customCurrency ? customCurrency : 'BRL';
         const style = customStyle ? customStyle : 'currency';
 
+		if(!element)
+		{
+			return;
+		}
+
         if (!!+element.innerText || +element.innerText === 0) {
             const number = +element.innerText;
             element.innerText = number.toLocaleString(language, { style: style, minimumFractionDigits: 2, maximumFractionDigits: 2, currency: currency });
@@ -25,6 +30,16 @@ export default class Money {
     setColor(customMoneySelector) {
 
         const element = customMoneySelector ? document.querySelector(customMoneySelector) : this.element;
+
+		if(!element)
+		{
+			return;
+		}
+
+		if(!element.dataset)
+		{
+			return;
+		}
 
         if (element.innerText > 0) {
             element.dataset.valueColor = "positive";
