@@ -10,7 +10,7 @@
 
   <a class="botao-opcoes botao-exibir-ocultar" id="opcao-exibir-ocultar">Ocultar valores</a>
 
-  <a class="botao-opcoes botao-final-pagina" id="opcao-fim-pagina" href="#footer">Descer tudo</a>
+  <a class="botao-opcoes botao-final-pagina" id="opcao-fim-pagina" href="#footer">Ir ao rodapé</a>
 
   <!-- Opções de Extrato -->
   <?php if ($pageName == 'statement') :  ?>

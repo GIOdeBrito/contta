@@ -1,8 +1,12 @@
 <footer id="footer">
     <nav class="menu-secundario">
-        <ul>
-            <li><a href="#header">Subir tudo</a></li>
+		<ul style="padding: 0;">
+			<li><a href="#header">Ir ao topo</a></li>
             <li><a href="?p=logout">Sair</a></li>
         </ul>
     </nav>
+
+	<div class="">
+		<p><?= date('d/m/Y') ?></p>
+	</div>
 </footer>

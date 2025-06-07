@@ -9,8 +9,13 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        volumes:
+            - ./app:/var/www/html/app
+            - ./assets:/var/www/html/assets
+            - ./plugin:/var/www/html/plugin
+            - ./index.html:/var/www/html/index.html
         ports:
-            - "3000:80"
+            - "${APP_PORT}:80"
         networks:
             - contta-network
         tty: true
@@ -20,7 +25,7 @@ services:
         container_name: phpmyadmin-container
         restart: always
         ports:
-            - "3100:80"
+            - "${PHPMYADMIN_PORT}:80"
         environment:
             PMA_HOST: db
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -35,7 +40,7 @@ services:
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
             MYSQL_DATABASE: ${DB_NAME}
         ports:
-            - "3306:3306"
+            - "${MYSQL_PORT}:3306"
         networks:
             - contta-network
 
